@@ -589,9 +589,11 @@
     if (startNotificationCallbackId) {
         if (error) {
             NSLog(@"%@", error);
-            pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:[error localizedDescription]];
-            [self.commandDelegate sendPluginResult:pluginResult callbackId:startNotificationCallbackId];
-            [startNotificationCallbacks removeObjectForKey:key];
+				if( [error code] !== CBATTError.CBATTErrorAttributeNotFound){
+				pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:[error localizedDescription]];
+				[self.commandDelegate sendPluginResult:pluginResult callbackId:startNotificationCallbackId];
+				[startNotificationCallbacks removeObjectForKey:key];
+			}
         } else {
             // notification start succeeded, move the callback to the value notifications dict
             [notificationCallbacks setObject:startNotificationCallbackId forKey:key];
