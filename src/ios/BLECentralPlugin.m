@@ -589,7 +589,7 @@
     if (startNotificationCallbackId) {
         if (error) {
             NSLog(@"%@", error);
-				if( [error code] !== CBATTError.CBATTErrorAttributeNotFound){
+			if( [error code] != CBATTErrorAttributeNotFound){
 				pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:[error localizedDescription]];
 				[self.commandDelegate sendPluginResult:pluginResult callbackId:startNotificationCallbackId];
 				[startNotificationCallbacks removeObjectForKey:key];
