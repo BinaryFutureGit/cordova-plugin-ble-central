@@ -574,7 +574,10 @@
     // we only call the notificationCallbackId on errors and if there is no stopNotificationCallbackId
 
     if (stopNotificationCallbackId) {
-        if (error) {
+		// `&& [error code] != CBATTErrorAttributeNotFound`
+		// has been added to prevent this error stopping notifications in testing with prototype
+		// hardware
+        if (error && [error code] != CBATTErrorAttributeNotFound) {
             NSLog(@"%@", error);
             pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:[error localizedDescription]];
         } else {
@@ -587,13 +590,15 @@
     }
     
     if (startNotificationCallbackId) {
-        if (error) {
-            NSLog(@"%@", error);
-			if( [error code] != CBATTErrorAttributeNotFound){
-				pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:[error localizedDescription]];
-				[self.commandDelegate sendPluginResult:pluginResult callbackId:startNotificationCallbackId];
-				[startNotificationCallbacks removeObjectForKey:key];
-			}
+		// `&& [error code] != CBATTErrorAttributeNotFound`
+		// has been added to prevent this error stopping notifications in testing with prototype
+		// hardware
+        if (error && [error code] != CBATTErrorAttributeNotFound) {
+			NSLog(@"%@", error);
+			pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:[error localizedDescription]];
+			[self.commandDelegate sendPluginResult:pluginResult callbackId:startNotificationCallbackId];
+			[startNotificationCallbacks removeObjectForKey:key];
+			
         } else {
             // notification start succeeded, move the callback to the value notifications dict
             [notificationCallbacks setObject:startNotificationCallbackId forKey:key];
